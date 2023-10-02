@@ -467,9 +467,11 @@ public class Exec {
         container = pod.getSpec().getContainers().get(0).getName();
       }
 
+      String baseUrl = "";  // TODO: What should this be?
+
       ExecProcess exec = new ExecProcess(apiClient, onUnhandledError);
       WebSocketStreamHandler handler = exec.getHandler();
-      WebSockets.stream(makePath(), "GET", apiClient, handler);
+      WebSockets.stream(baseUrl, makePath(), "GET", apiClient, handler);
 
       return exec;
     }

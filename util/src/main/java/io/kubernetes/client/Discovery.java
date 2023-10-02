@@ -46,19 +46,19 @@ public class Discovery {
     this.apiClient = apiClient;
   }
 
-  public Set<APIResource> findAll() throws ApiException {
+  public Set<APIResource> findAll(String baseUrl) throws ApiException {
     Set<APIResource> allResources = new HashSet<>();
-    for (String version : legacyCoreApi().getVersions()) {
+    for (String version : legacyCoreApi(baseUrl).getVersions()) {
       allResources.addAll(findAll("", Arrays.asList(version), version, "/api/" + version));
     }
     IncompleteDiscoveryException incompleteDiscoveryException = null;
-    for (V1APIGroup group : groupDiscovery("/apis").getGroups()) {
+    for (V1APIGroup group : groupDiscovery(baseUrl, "/apis").getGroups()) {
       try {
         allResources.addAll(
             findAll(
                 group.getName(),
                 group.getVersions().stream().map(v -> v.getVersion()).collect(Collectors.toList()),
-                group.getPreferredVersion().getVersion()));
+                group.getPreferredVersion().getVersion(), baseUrl));
       } catch (ApiException e){
         IncompleteDiscoveryException resourceDiscoveryException = new IncompleteDiscoveryException(
             String.format("Unable to retrieve the complete list of server APIs: %s/%s : %s",
@@ -77,15 +77,15 @@ public class Discovery {
     return allResources;
   }
 
-  public Set<APIResource> findAll(String group, List<String> versions, String preferredVersion)
+  public Set<APIResource> findAll(String group, List<String> versions, String preferredVersion, String baseUrl)
       throws ApiException {
-    return findAll(group, versions, preferredVersion, "/apis/" + group + "/" + preferredVersion);
+    return findAll(group, versions, preferredVersion, baseUrl, "/apis/" + group + "/" + preferredVersion);
   }
 
   public Set<APIResource> findAll(
-      String group, List<String> versions, String preferredVersion, String path)
+      String group, List<String> versions, String preferredVersion, String baseUrl, String path)
       throws ApiException {
-    V1APIResourceList resourceList = resourceDiscovery(path);
+    V1APIResourceList resourceList = resourceDiscovery(baseUrl, path);
     return groupResourcesByName(group, versions, preferredVersion, resourceList);
   }
 
@@ -157,27 +157,28 @@ public class Discovery {
     return Optional.of(parts[1]);
   }
 
-  public V1APIVersions legacyCoreApi() throws ApiException {
-    return versionDiscovery("/api");
+  public V1APIVersions legacyCoreApi(String baseUrl) throws ApiException {
+    return versionDiscovery(baseUrl, "/api");
   }
 
-  public V1APIGroupList groupDiscovery(String path) throws ApiException {
-    return get(V1APIGroupList.class, path);
+  public V1APIGroupList groupDiscovery(String baseUrl, String path) throws ApiException {
+    return get(V1APIGroupList.class, baseUrl, path);
   }
 
-  public V1APIVersions versionDiscovery(String path) throws ApiException {
-    return get(V1APIVersions.class, path);
+  public V1APIVersions versionDiscovery(String baseUrl, String path) throws ApiException {
+    return get(V1APIVersions.class, baseUrl, path);
   }
 
-  public V1APIResourceList resourceDiscovery(String path) throws ApiException {
-    return get(V1APIResourceList.class, path);
+  public V1APIResourceList resourceDiscovery(String baseUrl, String path) throws ApiException {
+    return get(V1APIResourceList.class, baseUrl, path);
   }
 
-  private <T> T get(Class<T> returnTypeClass, String urlPath) throws ApiException {
+  private <T> T get(Class<T> returnTypeClass, String baseUrl, String urlPath) throws ApiException {
     Map<String, String> headers = new HashMap<>();
     headers.put("Content-Type", "application/json");
     Call call =
         apiClient.buildCall(
+            baseUrl,
             urlPath,
             "GET",
             null,

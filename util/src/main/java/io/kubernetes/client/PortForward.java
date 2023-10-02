@@ -113,7 +113,8 @@ public class PortForward {
     for (Integer port : ports) {
       queryParams.add(new Pair("ports", port.toString()));
     }
-    WebSockets.stream(path, "GET", queryParams, apiClient, handler);
+    String baseUrl = ""; // TODO: What should this be?
+    WebSockets.stream(baseUrl, path, "GET", queryParams, apiClient, handler);
     try {
       handler.waitForInitialized();
     } catch (InterruptedException ex) {

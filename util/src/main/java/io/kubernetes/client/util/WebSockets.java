@@ -76,18 +76,19 @@ public class WebSockets {
   /**
    * Create a new WebSocket stream
    *
+   * @param baseUrl The base URL
    * @param path The HTTP Path to request from the API
    * @param method The HTTP method to use for the call
    * @param client The ApiClient for communicating with the API
    * @param listener The socket listener to handle socket events
    */
-  public static void stream(String path, String method, ApiClient client, SocketListener listener)
+  public static void stream(String baseUrl, String path, String method, ApiClient client, SocketListener listener)
       throws ApiException, IOException {
-    stream(path, method, new ArrayList<Pair>(), client, listener);
+    stream(baseUrl, path, method, new ArrayList<Pair>(), client, listener);
   }
 
   public static void stream(
-      String path, String method, List<Pair> queryParams, ApiClient client, SocketListener listener)
+      String baseUrl, String path, String method, List<Pair> queryParams, ApiClient client, SocketListener listener)
       throws ApiException, IOException {
 
     HashMap<String, String> headers = new HashMap<String, String>();
@@ -98,6 +99,7 @@ public class WebSockets {
 
     Request request =
         client.buildRequest(
+            baseUrl,
             path,
             method,
             queryParams,

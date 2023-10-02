@@ -243,11 +243,12 @@ public class ModelMapper {
    * ModelMapper#DEFAULT_DISCOVERY_REFRESH_INTERVAL}.
    *
    * @param discovery the discovery
+   * @param baseUrl The base URL
    * @return the set
    * @throws ApiException the api exception
    */
-  public static Set<Discovery.APIResource> refresh(Discovery discovery) throws ApiException {
-    return refresh(discovery, DEFAULT_DISCOVERY_REFRESH_INTERVAL);
+  public static Set<Discovery.APIResource> refresh(Discovery discovery, String baseUrl) throws ApiException {
+    return refresh(discovery, DEFAULT_DISCOVERY_REFRESH_INTERVAL, baseUrl);
   }
 
   /**
@@ -260,7 +261,7 @@ public class ModelMapper {
    * @return the api-discovery set
    * @throws ApiException the api exception
    */
-  public static Set<Discovery.APIResource> refresh(Discovery discovery, Duration refreshInterval)
+  public static Set<Discovery.APIResource> refresh(Discovery discovery, Duration refreshInterval, String baseUrl)
       throws ApiException {
     long nowMillis = System.currentTimeMillis();
     if (nowMillis < nextDiscoveryRefreshTimeMillis) {
@@ -269,7 +270,7 @@ public class ModelMapper {
 
     Set<Discovery.APIResource> apiResources = null;
     try {
-      apiResources = discovery.findAll();
+      apiResources = discovery.findAll(baseUrl);
     } catch (IncompleteDiscoveryException e) {
       logger.warn("Error while getting all api resources, some api resources will not be refreshed", e);
       apiResources = e.getDiscoveredResources();

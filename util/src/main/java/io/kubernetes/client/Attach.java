@@ -229,7 +229,8 @@ public class Attach {
     public AttachResult connect() throws ApiException, IOException {
       WebSocketStreamHandler handler = new WebSocketStreamHandler();
       AttachResult result = new AttachResult(handler);
-      WebSockets.stream(makePath(), "GET", apiClient, handler);
+      String baseUrl = ""; //TODO what should this be?
+      WebSockets.stream(baseUrl, makePath(), "GET", apiClient, handler);
 
       return result;
     }
