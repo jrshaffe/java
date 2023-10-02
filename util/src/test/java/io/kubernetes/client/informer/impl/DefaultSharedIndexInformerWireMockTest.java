@@ -138,16 +138,15 @@ public class DefaultSharedIndexInformerWireMockTest {
                 return coreV1Api.listNamespacedPodCall(
                     namespace,
                     null,
-                    null,
+                        params.watch,
                     null,
                     null,
                     null,
                     null,
                     params.resourceVersion,
                     null,
-                    null,
                     params.timeoutSeconds,
-                    params.watch,
+                    null,
                     null);
               } catch (ApiException e) {
                 throw new RuntimeException(e);
@@ -261,7 +260,6 @@ public class DefaultSharedIndexInformerWireMockTest {
                     null,
                     null,
                     params.resourceVersion,
-                    null,
                     null,
                     params.timeoutSeconds,
                     params.watch,
@@ -398,7 +396,6 @@ public class DefaultSharedIndexInformerWireMockTest {
                     null,
                     params.resourceVersion,
                     null,
-                    null,
                     params.timeoutSeconds,
                     params.watch,
                     null);
@@ -511,7 +508,6 @@ public class DefaultSharedIndexInformerWireMockTest {
                     null,
                     params.resourceVersion,
                     null,
-                    null,
                     params.timeoutSeconds,
                     params.watch,
                     null);
@@ -580,7 +576,6 @@ public class DefaultSharedIndexInformerWireMockTest {
                     null,
                     null,
                     params.resourceVersion,
-                    null,
                     null,
                     params.timeoutSeconds,
                     params.watch,

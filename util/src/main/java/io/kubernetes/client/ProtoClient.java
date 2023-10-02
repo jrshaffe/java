@@ -100,12 +100,13 @@ public class ProtoClient {
    * Get a Kubernetes API object using protocol buffer encoding.
    *
    * @param builder The appropriate Builder for the object received from the request.
+   * @param baseUrl The base URL
    * @param path The URL path to call (e.g. /api/v1/namespaces/default/pods/pod-name)
    * @return An ObjectOrStatus which contains the Object requested, or a Status about the request.
    */
-  public <T extends Message> ObjectOrStatus<T> get(T.Builder builder, String path)
+  public <T extends Message> ObjectOrStatus<T> get(T.Builder builder, String baseUrl, String path)
       throws ApiException, IOException {
-    return request(builder, path, "GET", null, null, null);
+    return request(builder, baseUrl, path, "GET", null, null, null);
   }
 
   /**
@@ -113,81 +114,87 @@ public class ProtoClient {
    * object is a List of objects rather than a single object
    *
    * @param builder The appropriate Builder for the object received from the request.
+   * @param baseUrl The base URL
    * @param path The URL path to call (e.g. /api/v1/namespaces/default/pods/pod-name)
    * @return An ObjectOrStatus which contains the Object requested, or a Status about the request.
    */
-  public <T extends Message> ObjectOrStatus<T> list(T.Builder builder, String path)
+  public <T extends Message> ObjectOrStatus<T> list(T.Builder builder, String baseUrl, String path)
       throws ApiException, IOException {
-    return get(builder, path);
+    return get(builder, baseUrl, path);
   }
 
   /**
    * Create a Kubernetes API object using protocol buffer encoding. Performs a POST
    *
    * @param obj The object to create
+   * @param baseUrl The base URL
    * @param path The URL path to call
    * @param apiVersion The api version to use
    * @param kind The kind of the object
    * @return An ObjectOrStatus which contains the Object requested, or a Status about the request.
    */
   public <T extends Message> ObjectOrStatus<T> create(
-      T obj, String path, String apiVersion, String kind) throws ApiException, IOException {
-    return request(obj.newBuilderForType(), path, "POST", obj, apiVersion, kind);
+      T obj, String baseUrl, String path, String apiVersion, String kind) throws ApiException, IOException {
+    return request(obj.newBuilderForType(), path, baseUrl, "POST", obj, apiVersion, kind);
   }
 
   /**
    * Update a Kubernetes API object using protocol buffer encoding. Performs a PUT
    *
    * @param obj The object to create
+   * @param baseUrl The base URL
    * @param path The URL path to call
    * @param apiVersion The api version to use
    * @param kind The kind of the object
    * @return An ObjectOrStatus which contains the Object requested, or a Status about the request.
    */
   public <T extends Message> ObjectOrStatus<T> update(
-      T obj, String path, String apiVersion, String kind) throws ApiException, IOException {
-    return request(obj.newBuilderForType(), path, "PUT", obj, apiVersion, kind);
+      T obj, String baseUrl, String path, String apiVersion, String kind) throws ApiException, IOException {
+    return request(obj.newBuilderForType(), baseUrl, path, "PUT", obj, apiVersion, kind);
   }
 
   /**
    * Merge a Kubernetes API object using protocol buffer encoding. Performs a PATCH
    *
    * @param obj The object to merge
+   * @param baseUrl The base URL
    * @param path The URL path to call
    * @param apiVersion The api version to use
    * @param kind The kind of the object
    * @return An ObjectOrStatus which contains the Object requested, or a Status about the request.
    */
   public <T extends Message> ObjectOrStatus<T> merge(
-      T obj, String path, String apiVersion, String kind) throws ApiException, IOException {
-    return request(obj.newBuilderForType(), path, "PATCH", obj, apiVersion, kind);
+      T obj, String baseUrl, String path, String apiVersion, String kind) throws ApiException, IOException {
+    return request(obj.newBuilderForType(), baseUrl, path, "PATCH", obj, apiVersion, kind);
   }
 
   /**
    * Delete a kubernetes API object using protocol buffer encoding.
    *
    * @param builder The builder for the response
+   * @param baseUrl The base URL
    * @param path The path to call in the API server
    * @return The response status
    */
-  public <T extends Message> ObjectOrStatus<T> delete(T.Builder builder, String path)
+  public <T extends Message> ObjectOrStatus<T> delete(T.Builder builder, String baseUrl, String path)
       throws ApiException, IOException {
-    return request(builder, path, "DELETE", null, null, null);
+    return request(builder, baseUrl, path, "DELETE", null, null, null);
   }
 
   /**
    * Delete a kubernetes API object using protocol buffer encoding.
    *
    * @param builder The builder for the response
+   * @param baseUrl The base URL
    * @param path The path to call in the API server
    * @param deleteOptions optional deleteOptions
    * @return The response status
    */
   public <T extends Message> ObjectOrStatus<T> delete(
-      T.Builder builder, String path, DeleteOptions deleteOptions)
+      T.Builder builder, String baseUrl ,String path, DeleteOptions deleteOptions)
       throws ApiException, IOException {
     if (deleteOptions == null) {
-      return delete(builder, path);
+      return delete(builder, baseUrl, path);
     }
 
     HashMap<String, String> headers = new HashMap<>();
@@ -196,6 +203,7 @@ public class ProtoClient {
     String[] localVarAuthNames = new String[] {"BearerToken"};
     Request request =
         apiClient.buildRequest(
+                "",
             path,
             "DELETE",
             new ArrayList<Pair>(),
@@ -218,6 +226,7 @@ public class ProtoClient {
    *
    * @param builder The appropriate Builder for the object received from the request.
    * @param method The HTTP method (e.g. GET) for this request.
+   * @param baseUrl The base URL
    * @param path The URL path to call (e.g. /api/v1/namespaces/default/pods/pod-name)
    * @param body The body to send with the request (optional)
    * @param apiVersion The 'apiVersion' to use when encoding, required if body is non-null, ignored
@@ -227,7 +236,7 @@ public class ProtoClient {
    * @return An ObjectOrStatus which contains the Object requested, or a Status about the request.
    */
   public <T extends Message> ObjectOrStatus<T> request(
-      T.Builder builder, String path, String method, T body, String apiVersion, String kind)
+      T.Builder builder, String baseUrl, String path, String method, T body, String apiVersion, String kind)
       throws ApiException, IOException {
     HashMap<String, String> headers = new HashMap<>();
     headers.put("Content-Type", MEDIA_TYPE);
@@ -235,6 +244,7 @@ public class ProtoClient {
     String[] localVarAuthNames = new String[] {"BearerToken"};
     Request request =
         apiClient.buildRequest(
+            baseUrl,
             path,
             method,
             new ArrayList<Pair>(),

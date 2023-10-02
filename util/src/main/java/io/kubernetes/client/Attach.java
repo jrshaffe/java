@@ -229,7 +229,7 @@ public class Attach {
     public AttachResult connect() throws ApiException, IOException {
       WebSocketStreamHandler handler = new WebSocketStreamHandler();
       AttachResult result = new AttachResult(handler);
-      WebSockets.stream(makePath(), "GET", apiClient, handler);
+      WebSockets.stream("", makePath(), "GET", apiClient, handler);
 
       return result;
     }

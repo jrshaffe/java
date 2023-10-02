@@ -469,7 +469,7 @@ public class Exec {
 
       ExecProcess exec = new ExecProcess(apiClient, onUnhandledError);
       WebSocketStreamHandler handler = exec.getHandler();
-      WebSockets.stream(makePath(), "GET", apiClient, handler);
+      WebSockets.stream("", makePath(), "GET", apiClient, handler);
 
       return exec;
     }

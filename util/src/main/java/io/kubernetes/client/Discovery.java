@@ -185,7 +185,7 @@ public class Discovery {
             null,
             headers,
             Collections.emptyMap(),
-            Collections.emptyMap(),
+            Collections.emptyMap(), Collections.emptyMap(),
             new String[] {"BearerToken"},
             null);
     ApiResponse<T> resourceList = apiClient.execute(call, returnTypeClass);

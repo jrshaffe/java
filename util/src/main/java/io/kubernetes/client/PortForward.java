@@ -113,7 +113,7 @@ public class PortForward {
     for (Integer port : ports) {
       queryParams.add(new Pair("ports", port.toString()));
     }
-    WebSockets.stream(path, "GET", queryParams, apiClient, handler);
+    WebSockets.stream("", path, "GET", queryParams, apiClient, handler);
     try {
       handler.waitForInitialized();
     } catch (InterruptedException ex) {
