@@ -52,7 +52,7 @@ public class JSONTest {
     String timeStr = "\"2018-04-03T11:32:26.1234Z\"";
     OffsetDateTime dateTime = json.deserialize(timeStr, OffsetDateTime.class);
     String serializedTsStr = json.serialize(dateTime);
-    String expectedStr = "\"2018-04-03T11:32:26.123400Z\"";
+    String expectedStr = "\"2018-04-03T11:32:26.1234Z\"";
     assertEquals(expectedStr, serializedTsStr);
   }
 
@@ -61,7 +61,7 @@ public class JSONTest {
     String timeStr = "\"2018-04-03T11:32:26.123Z\"";
     OffsetDateTime dateTime = json.deserialize(timeStr, OffsetDateTime.class);
     String serializedTsStr = json.serialize(dateTime);
-    String expectedStr = "\"2018-04-03T11:32:26.123000Z\"";
+    String expectedStr = "\"2018-04-03T11:32:26.123Z\"";
     assertEquals(expectedStr, serializedTsStr);
   }
 
@@ -70,7 +70,7 @@ public class JSONTest {
     String timeStr = "\"2018-04-03T11:32:26Z\"";
     OffsetDateTime dateTime = json.deserialize(timeStr, OffsetDateTime.class);
     String serializedTsStr = json.serialize(dateTime);
-    String expectedStr = "\"2018-04-03T11:32:26.000000Z\"";
+    String expectedStr = "\"2018-04-03T11:32:26Z\"";
     assertEquals(expectedStr, serializedTsStr);
   }
 }
